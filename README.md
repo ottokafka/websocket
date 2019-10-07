@@ -1,6 +1,7 @@
 # Websocket.io HTML5 and Node.js
 
-This app goes through the usage of websocket and how to implement them in a app
+simple chat application using Node.js and websocket.io
+
 
 # How to run it
 ```node
