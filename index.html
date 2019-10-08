@@ -9,7 +9,8 @@
 </head>
 
 <script>
-    var ws = new WebSocket("ws://localhost:5000");
+    var HOST = location.origin.replace(/^http/, 'ws')
+    var ws = new WebSocket(HOST);
     var nickname = "";
     ws.onopen = function(e) {
         console.log('Connection to server opened');
