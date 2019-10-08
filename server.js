@@ -3,25 +3,26 @@
 const express = require('express');
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
-// local dev port below disable when not in localhost
+
+// // local dev port below disable when not in localhost
 //     wss = new WebSocketServer({port: 8080});
 // console.log("listening on port 8080");
 
 var uuid = require('node-uuid');
 const path = require('path');
-
-// const app = express();
 const PORT = process.env.PORT || 5000;
 const INDEX = path.join(__dirname, 'index.html');
 
-// main server enable this if not using localdev
+// Main server if need localhost dev disable this or enable when finished and ready for heroku
 const server = express()
     .use((req, res) => res.sendFile(INDEX) )
     .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-const wss = new WebSocketServer({ server });
 
+const wss = new WebSocketServer({ server });
 var clients = [];
+
+
 function wsSend(type, client_uuid, nickname, message) {
     for ( var i=0; i<clients.length; i++) {
     var clientSocket = clients[i].ws;
