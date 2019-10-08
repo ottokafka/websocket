@@ -9,7 +9,7 @@
 </head>
 
 <script>
-    var ws = new WebSocket("ws://https://websocket-chat-no-vpn.herokuapp.com");
+    var ws = new WebSocket("wss://websocket-chat-no-vpn.herokuapp.com:8080");
     var nickname = "";
     ws.onopen = function(e) {
         console.log('Connection to server opened');
@@ -45,8 +45,7 @@
         messageField.value = '';
         messageField.focus();
     }
-    function disconnect() { ws.close();
-    }
+    function disconnect() { ws.close(); }
 </script>
 
 <body lang="en">

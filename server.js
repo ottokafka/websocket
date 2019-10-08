@@ -1,9 +1,14 @@
 // this is the server for websocket.io run node server.js
 //A UUID is used to identify each client that has connected to the server
+// const express = require('express');
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server,
-    wss = new WebSocketServer({port: 8181});
+    wss = new WebSocketServer({port: 8080});
 var uuid = require('node-uuid');
+
+// const app = express();
+// const port = process.env.PORT || 5000;
+// app.listen(port, () => console.log(`Server running on port ${port}`));
 
 var clients = [];
 function wsSend(type, client_uuid, nickname, message) {
