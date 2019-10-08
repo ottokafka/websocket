@@ -22,10 +22,19 @@ const server = express()
 const wss = new WebSocketServer({ server });
 var clients = [];
 
+// Send the date from the server to the client
+function wsDateSend() {
+    let clientSocket = clients[i].ws;
+    if (clientSocket.readyState === WebSocket.OPEN) {
+        clientSocket.send(JSON.stringify({
+            "date":new Date().toString()
+        }));
+    }
+}
 
 function wsSend(type, client_uuid, nickname, message) {
     for ( let i = 0; i < clients.length; i++) {
-    var clientSocket = clients[i].ws;
+    let clientSocket = clients[i].ws;
     if (clientSocket.readyState === WebSocket.OPEN) {
         clientSocket.send(JSON.stringify({
             "type": type,
@@ -38,6 +47,11 @@ function wsSend(type, client_uuid, nickname, message) {
 var clientIndex = 1;
 
 wss.on('connection', function(ws) {
+
+    // // Keep connection alive by sending time every second
+    setInterval(function () {
+        wsDateSend()
+    }, 5000);
 
     var client_uuid = uuid.v4();
 
@@ -67,11 +81,6 @@ wss.on('connection', function(ws) {
         else {
         wsSend("message", client_uuid, nickname, message);
     }
-        // // Keep connection alive by sending time every second
-        setInterval(function () {
-
-            wsSend(console.log(new Date().toString()))
-        }, 5000)
     });
 
     var closeSocket = function(customMessage) {
