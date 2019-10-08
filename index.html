@@ -18,8 +18,10 @@
         var messageElem = document.createElement("li");
         var preface_label;
         if(type==='notification') {
-            preface_label = "<span class=\"label label-info\">*</span>"; } else if(type=='nick_update') {
-            preface_label = "<span class=\"label label-warning\">*</span>"; }else{
+            preface_label = "<span class=\"label label-info\">*</span>"; }
+        else if(type=='nick_update') {
+            preface_label = "<span class=\"label label-warning\">*</span>"; }
+        else{
             preface_label = "<span class=\"label label-success\">"
                 + nickname + "</span>";
         }
