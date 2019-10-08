@@ -41,6 +41,10 @@ var clientIndex = 1;
 wss.on('connection', function(ws) {
 
     // // Keep connection alive by sending time every second
+    setInterval(function () {
+        console.log(new Date().getTime().toString())
+    }, 30000)
+
     // setInterval(() => {
     //     wss.clients.forEach((client) => {
     //         client.send(console.log(new Date().getTime().toString()));

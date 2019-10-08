@@ -40,7 +40,7 @@
     }
 
     ws.onmessage = function(e) {
-        console.log("I want to see the data" + e.data);
+        // console.log("I want to see the data" + e.data);
         var data = JSON.parse(e.data);
         nickname = data.nickname;
         appendLog(data.type, data.nickname, data.message);
@@ -59,9 +59,6 @@
         }
         messageField.value = '';
         messageField.focus();
-        setInterval(function () {
-            console.log(new Date().getTime().toString())
-        }, 30000)
     }
 
     function disconnect() { ws.close(); }
