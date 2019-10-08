@@ -18,13 +18,13 @@ const server = express()
     .use((req, res) => res.sendFile(INDEX) )
     .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-
+// websocket takes in the express node server
 const wss = new WebSocketServer({ server });
 var clients = [];
 
 
 function wsSend(type, client_uuid, nickname, message) {
-    for ( var i=0; i < clients.length; i++) {
+    for ( let i = 0; i < clients.length; i++) {
     var clientSocket = clients[i].ws;
     if (clientSocket.readyState === WebSocket.OPEN) {
         clientSocket.send(JSON.stringify({
@@ -35,15 +35,11 @@ function wsSend(type, client_uuid, nickname, message) {
         })); }
 } }
 
-// todo: add time update function every 2 seconds to keep the connection alive current bug connection dies if no test from client.
-
 var clientIndex = 1;
+
 wss.on('connection', function(ws) {
 
-    // // Keep connection alive by sending time every second
-    setInterval(function () {
-        console.log(new Date().getTime().toString())
-    }, 30000)
+
 
     // setInterval(() => {
     //     wss.clients.forEach((client) => {
@@ -63,20 +59,27 @@ wss.on('connection', function(ws) {
     clientIndex+=1;
     clients.push({"id": client_uuid, "ws": ws, "nickname": nickname});
     console.log('client [%s] connected', client_uuid);
-
     var connect_message = nickname + " has connected";
     wsSend("notification", client_uuid, nickname, connect_message);
+
+
     ws.on('message', function(message) {
         if (message.indexOf('/nick') === 0) {
         var nickname_array = message.split(' ');
         if(nickname_array.length >= 2) {
             var old_nickname = nickname;
             nickname = nickname_array[1];
-            var nickname_message = "Client "+old_nickname+" changed to "+nickname; wsSend("nick_update", client_uuid, nickname, nickname_message);
-        } }
+            var nickname_message = "Client "+old_nickname+" changed to "+nickname;
+            wsSend("nick_update", client_uuid, nickname, nickname_message);
+        }}
         else {
         wsSend("message", client_uuid, nickname, message);
     }
+        // // Keep connection alive by sending time every second
+        setInterval(function () {
+            console.log(new Date().getTime().toString())
+            wsSend(new Date().getTime().toString())
+        }, 5000)
     });
 
     var closeSocket = function(customMessage) {
