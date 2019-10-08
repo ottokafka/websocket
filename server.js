@@ -39,14 +39,6 @@ var clientIndex = 1;
 
 wss.on('connection', function(ws) {
 
-
-
-    // setInterval(() => {
-    //     wss.clients.forEach((client) => {
-    //         client.send(console.log(new Date().getTime().toString()));
-    //     });
-    // }, 5000);
-
     var client_uuid = uuid.v4();
 
     let randomNamesArr = ["🍎", "🍊", "🍌", "🍑", "🍆", "🥦", "🥛", "🐂", "🐷", "🐱", "🎩", "🐑", "🐶", "🐎", "👩", "👨", "💰", "👃", "🦢", "👂", "🤚", "😯", "🐯", "🏠", "👀", "🐲", "❤️", "🇨🇳", "🇺🇸"];
@@ -77,8 +69,8 @@ wss.on('connection', function(ws) {
     }
         // // Keep connection alive by sending time every second
         setInterval(function () {
-            console.log(new Date().getTime().toString())
-            wsSend(new Date().getTime().toString())
+
+            wsSend(console.log(new Date().toString()))
         }, 5000)
     });
 
