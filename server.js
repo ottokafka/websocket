@@ -1,6 +1,6 @@
 // this is the server for websocket.io run node server.js
 //A UUID is used to identify each client that has connected to the server
-// const express = require('express');
+const express = require('express');
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
     // wss = new WebSocketServer({port: 8080});
