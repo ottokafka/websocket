@@ -9,23 +9,31 @@
 </head>
 
 <script>
-    var HOST = location.origin.replace(/^http/, 'ws')
-    var ws = new WebSocket(HOST);
+    // testing server only disable when finished testing and enable main server
+    var ws = new WebSocket("ws://localhost:8080");
+
+
+// //  Main server usage for heroku
+//     var HOST = location.origin.replace(/^http/, 'ws')
+//     var ws = new WebSocket(HOST);
+
+    // our name variable
     var nickname = "";
+
     ws.onopen = function(e) {
         console.log('Connection to server opened');
     }
+
     function appendLog(type, nickname, message) {
         var messages = document.getElementById('messages');
         var messageElem = document.createElement("li");
         var preface_label;
         if(type==='notification') {
-            preface_label = "<span class=\"label label-info\">*</span>"; }
+            preface_label = `<span class="myname"> * </span>`; }
         else if(type=='nick_update') {
-            preface_label = "<span class=\"label label-warning\">*</span>"; }
+            preface_label =  `<span class="myname"> * </span>`; }
         else{
-            preface_label = "<span class=\"label label-success\">"
-                + nickname + "</span>";
+            preface_label = `<span class="myname"> ${nickname} </span>`;
         }
         var message_text = "<h2>" + preface_label + "&nbsp;&nbsp;" + message + "</h2>";
         messageElem.innerHTML = message_text; messages.appendChild(messageElem);
@@ -77,6 +85,9 @@
         font-size: 45px;
         color: blue;
         background: chartreuse;
+    }
+    .myname{
+        color: blue;
     }
 </style>
 </body>

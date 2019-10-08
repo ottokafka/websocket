@@ -3,7 +3,9 @@
 const express = require('express');
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
-    // wss = new WebSocketServer({port: 8080});
+// local dev port below disable when not in localhost
+    wss = new WebSocketServer({port: 8080});
+console.log("listening on port 8080");
 
 var uuid = require('node-uuid');
 const path = require('path');
@@ -13,11 +15,10 @@ const PORT = process.env.PORT || 5000;
 const INDEX = path.join(__dirname, 'index.html');
 // app.listen(port, () => console.log(`Server running on port ${port}`));
 
-const server = express()
-    .use((req, res) => res.sendFile(INDEX) )
-    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
-
-const wss = new WebSocketServer({ server });
+// const server = express()
+//     .use((req, res) => res.sendFile(INDEX) )
+//     .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+// const wss = new WebSocketServer({ server });
 
 var clients = [];
 function wsSend(type, client_uuid, nickname, message) {
@@ -35,7 +36,15 @@ function wsSend(type, client_uuid, nickname, message) {
 var clientIndex = 1;
 wss.on('connection', function(ws) {
     var client_uuid = uuid.v4();
-    var nickname = "AnonymousUser" + clientIndex;
+
+    let randomNamesArr = ["🍎", "🍊", "🍌", "🍑", "🍆", "🥦", "🥛", "🐂", "🐷", "🐱", "🎩", "🐑", "🐶", "🐎", "👩", "👨", "💰", "👃", "🦢", "👂", "🤚", "😯", "🐯", "🏠", "👀", "🐲", "❤️", "🇨🇳", "🇺🇸"];
+
+    //get length of array
+    var randomNum = Math.floor((Math.random() * randomNamesArr.length) - 1);
+    let nickname = randomNamesArr[randomNum];
+
+
+    nickname = nickname + clientIndex;
     clientIndex+=1;
     clients.push({"id": client_uuid, "ws": ws, "nickname": nickname});
     console.log('client [%s] connected', client_uuid);
@@ -56,7 +65,7 @@ wss.on('connection', function(ws) {
     });
     var closeSocket = function(customMessage) {
         for (var i=0; i<clients.length; i++) {
-        if(clients[i].id == client_uuid) {
+        if(clients[i].id === client_uuid) {
             var disconnect_message;
             if(customMessage) {
             disconnect_message = customMessage; }
