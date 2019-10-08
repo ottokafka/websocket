@@ -6,14 +6,18 @@ var WebSocketServer = WebSocket.Server;
     // wss = new WebSocketServer({port: 8080});
 
 var uuid = require('node-uuid');
+const path = require('path');
 
-const app = express();
-const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+// const app = express();
+const PORT = process.env.PORT || 5000;
+const INDEX = path.join(__dirname, 'index.html');
+// app.listen(port, () => console.log(`Server running on port ${port}`));
 
-// const server = express()
-//     .use((req, res) => res.sendFile(INDEX) )
-//     .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+const server = express()
+    .use((req, res) => res.sendFile(INDEX) )
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
+const wss = new WebSocketServer({ server });
 
 var clients = [];
 function wsSend(type, client_uuid, nickname, message) {
