@@ -13,14 +13,14 @@
     // var ws = new WebSocket("ws://localhost:8080");
 
 
-//  Main server usage for heroku
-    var HOST = location.origin.replace(/^http/, 'ws')
-    var ws = new WebSocket(HOST);
+    //  Main server usage for heroku
+        var HOST = location.origin.replace(/^http/, 'ws')
+        var ws = new WebSocket(HOST);
 
     // our name variable
     var nickname = "";
 
-    ws.onopen = function(e) {
+    ws.onopen = function (e) {
         console.log('Connection to server opened');
     }
 
@@ -28,40 +28,59 @@
         var messages = document.getElementById('messages');
         var messageElem = document.createElement("li");
         var preface_label;
-        if(type==='notification') {
-            preface_label = `<span class="myname"> * </span>`; }
-        else if(type=='nick_update') {
-            preface_label =  `<span class="myname"> * </span>`; }
-        else{
+        if (type === 'notification') {
+            preface_label = `<span class="myname"> * </span>`;
+        } else if (type == 'nick_update') {
+            preface_label = `<span class="myname"> * </span>`;
+        } else {
             preface_label = `<span class="myname"> ${nickname} </span>`;
         }
         var message_text = "<h2>" + preface_label + "&nbsp;&nbsp;" + message + "</h2>";
-        messageElem.innerHTML = message_text; messages.appendChild(messageElem);
+        messageElem.innerHTML = message_text;
+        messages.appendChild(messageElem);
     }
 
-    ws.onmessage = function(e) {
-        // console.log("I want to see the data" + e.data);
-        var data = JSON.parse(e.data);
-        nickname = data.nickname;
-        appendLog(data.type, data.nickname, data.message);
-        console.log("ID: [%s] = %s", data.id, data.message);
+    function dateLog(thedate) {
+        let showDate = document.getElementById('time').innerHTML = `<p>${thedate}</p>`;
+        // let messageElem = document.createElement("li");
+        //
+        // let message_text =`<p>${thedate}</p>`;
+        // messageElem.innerHTML = message_text;
+        // messages.appendChild(messageElem);
+    }
+
+    ws.onmessage = function (e) {
+        console.log("I want to see the data" + e.data);
+        let date = JSON.parse(e.data)
+        if (date.date) {
+            dateLog(date.date)
+        }
+        let data = JSON.parse(e.data);
+        if (data.type){
+            nickname = data.nickname;
+            appendLog(data.type, data.nickname, data.message);
+            // console.log("ID: [%s] = %s", data.id, data.message);
+
+        }
     };
 
-    ws.onclose = function(e) {
+    ws.onclose = function (e) {
         appendLog("Connection closed");
         console.log("Connection closed");
     };
 
     function sendMessage() {
         var messageField = document.getElementById('message');
-        if(ws.readyState === WebSocket.OPEN) {
+        if (ws.readyState === WebSocket.OPEN) {
             ws.send(messageField.value);
         }
         messageField.value = '';
         messageField.focus();
     }
 
-    function disconnect() { ws.close(); }
+    function disconnect() {
+        ws.close();
+    }
 </script>
 
 <body lang="en">
@@ -69,23 +88,26 @@
     <div class="container">
         <ul id="messages" class="list-unstyled">
         </ul>
-        <hr />
+        <hr/>
         <form role="form" id="chat_form" onsubmit="sendMessage(); return false;">
             <div class="form-group">
                 <input class="form-control myinput" type="text" id="message" name="message"
-                       placeholder="Type text to echo in here" value="" autofocus/> </div>
-            <button type="button" id="send" class="btn btn-primary" onclick="sendMessage();">Send Message</button> </form>
+                       placeholder="Type text to echo in here" value="" autofocus/></div>
+            <button type="button" id="send" class="btn btn-primary" onclick="sendMessage();">Send Message</button>
+        </form>
+        <p id="time"></p>
     </div>
 </div>
 
 <style>
-    .myinput{
+    .myinput {
         width: 100%;
         height: 50px;
         font-size: 45px;
         color: green;
         border: solid black;
     }
+
     .btn {
         width: 50%;
         height: 50px;
@@ -93,7 +115,8 @@
         color: blue;
         background: chartreuse;
     }
-    .myname{
+
+    .myname {
         color: blue;
     }
 </style>
@@ -102,66 +125,66 @@
 <!--<script src="http://bit.ly/cdn-bootstrap-minjs"></script>-->
 <!--<script language="javascript" type="text/javascript">-->
 
-    <!--// &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Basic functionality of the websocket.io-->
+<!--// &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Basic functionality of the websocket.io-->
 
-    <!--var wsUri = "ws://localhost:8181/";-->
-    <!--var output;-->
+<!--var wsUri = "ws://localhost:8181/";-->
+<!--var output;-->
 
-    <!--function init()-->
-    <!--{-->
-        <!--output = document.getElementById("output");-->
-        <!--testWebSocket();-->
-    <!--}-->
+<!--function init()-->
+<!--{-->
+<!--output = document.getElementById("output");-->
+<!--testWebSocket();-->
+<!--}-->
 
-    <!--function testWebSocket()-->
-    <!--{-->
-        <!--websocket = new WebSocket(wsUri);-->
-        <!--websocket.onopen = function(evt) { onOpen(evt) };-->
-        <!--websocket.onclose = function(evt) { onClose(evt) };-->
-        <!--websocket.onmessage = function(evt) { onMessage(evt) };-->
-        <!--websocket.onerror = function(evt) { onError(evt) };-->
-    <!--}-->
+<!--function testWebSocket()-->
+<!--{-->
+<!--websocket = new WebSocket(wsUri);-->
+<!--websocket.onopen = function(evt) { onOpen(evt) };-->
+<!--websocket.onclose = function(evt) { onClose(evt) };-->
+<!--websocket.onmessage = function(evt) { onMessage(evt) };-->
+<!--websocket.onerror = function(evt) { onError(evt) };-->
+<!--}-->
 
-    <!--function onOpen(evt)-->
-    <!--{-->
-        <!--writeToScreen("CONNECTED");-->
-        <!--// send message to server-->
-        <!--doSend("WebSocket rocks so does freedom even if its fake freedom");-->
-    <!--}-->
+<!--function onOpen(evt)-->
+<!--{-->
+<!--writeToScreen("CONNECTED");-->
+<!--// send message to server-->
+<!--doSend("WebSocket rocks so does freedom even if its fake freedom");-->
+<!--}-->
 
-    <!--function onClose(evt)-->
-    <!--{-->
-        <!--writeToScreen("DISCONNECTED");-->
-    <!--}-->
+<!--function onClose(evt)-->
+<!--{-->
+<!--writeToScreen("DISCONNECTED");-->
+<!--}-->
 
-    <!--function onMessage(evt)-->
-    <!--{-->
-        <!--writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');-->
-        <!--websocket.close();-->
-    <!--}-->
+<!--function onMessage(evt)-->
+<!--{-->
+<!--writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');-->
+<!--websocket.close();-->
+<!--}-->
 
-    <!--function onError(evt)-->
-    <!--{-->
-        <!--writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);-->
-    <!--}-->
+<!--function onError(evt)-->
+<!--{-->
+<!--writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);-->
+<!--}-->
 
-    <!--function doSend(message)-->
-    <!--{-->
-        <!--writeToScreen("SENT: " + message);-->
-        <!--websocket.send(message);-->
-    <!--}-->
+<!--function doSend(message)-->
+<!--{-->
+<!--writeToScreen("SENT: " + message);-->
+<!--websocket.send(message);-->
+<!--}-->
 
-    <!--function writeToScreen(message)-->
-    <!--{-->
-        <!--var pre = document.createElement("p");-->
-        <!--pre.style.wordWrap = "break-word";-->
-        <!--pre.innerHTML = message;-->
-        <!--output.appendChild(pre);-->
-    <!--}-->
+<!--function writeToScreen(message)-->
+<!--{-->
+<!--var pre = document.createElement("p");-->
+<!--pre.style.wordWrap = "break-word";-->
+<!--pre.innerHTML = message;-->
+<!--output.appendChild(pre);-->
+<!--}-->
 
-    <!--window.addEventListener("load", init, false);-->
+<!--window.addEventListener("load", init, false);-->
 
-    <!--// &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Basic functionality of the websocket.io-->
+<!--// &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Basic functionality of the websocket.io-->
 <!--</script>-->
 
 

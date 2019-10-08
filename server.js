@@ -17,20 +17,21 @@ const INDEX = path.join(__dirname, 'index.html');
 const server = express()
     .use((req, res) => res.sendFile(INDEX) )
     .listen(PORT, () => console.log(`Listening on ${ PORT }`));
-
 // websocket takes in the express node server
 const wss = new WebSocketServer({ server });
-var clients = [];
+
+
 
 // Send the date from the server to the client
 function wsDateSend() {
-    let clientSocket = clients[i].ws;
-    if (clientSocket.readyState === WebSocket.OPEN) {
-        clientSocket.send(JSON.stringify({
-            "date":new Date().toString()
-        }));
-    }
+    setInterval(() => {
+        wss.clients.forEach((client) => {
+            client.send(JSON.stringify({"date":new Date().toLocaleString()}));
+        });
+    }, 55000);
 }
+
+var clients = [];
 
 function wsSend(type, client_uuid, nickname, message) {
     for ( let i = 0; i < clients.length; i++) {
@@ -47,11 +48,6 @@ function wsSend(type, client_uuid, nickname, message) {
 var clientIndex = 1;
 
 wss.on('connection', function(ws) {
-
-    // // Keep connection alive by sending time every second
-    setInterval(function () {
-        wsDateSend()
-    }, 5000);
 
     var client_uuid = uuid.v4();
 
@@ -82,6 +78,9 @@ wss.on('connection', function(ws) {
         wsSend("message", client_uuid, nickname, message);
     }
     });
+
+    // // Keep connection alive by sending time every second
+    wsDateSend()
 
     var closeSocket = function(customMessage) {
         for (var i=0; i<clients.length; i++) {
