@@ -59,6 +59,9 @@
         }
         messageField.value = '';
         messageField.focus();
+        setInterval(function () {
+            console.log(new Date().getTime().toString())
+        }, 55000)
     }
     function disconnect() { ws.close(); }
 </script>

@@ -24,7 +24,7 @@ var clients = [];
 
 
 function wsSend(type, client_uuid, nickname, message) {
-    for ( var i=0; i<clients.length; i++) {
+    for ( var i=0; i < clients.length; i++) {
     var clientSocket = clients[i].ws;
     if (clientSocket.readyState === WebSocket.OPEN) {
         clientSocket.send(JSON.stringify({
