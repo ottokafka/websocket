@@ -4,8 +4,8 @@ const express = require('express');
 var WebSocket = require('ws');
 var WebSocketServer = WebSocket.Server;
 // local dev port below disable when not in localhost
-    wss = new WebSocketServer({port: 8080});
-console.log("listening on port 8080");
+//     wss = new WebSocketServer({port: 8080});
+// console.log("listening on port 8080");
 
 var uuid = require('node-uuid');
 const path = require('path');
@@ -13,12 +13,13 @@ const path = require('path');
 // const app = express();
 const PORT = process.env.PORT || 5000;
 const INDEX = path.join(__dirname, 'index.html');
-// app.listen(port, () => console.log(`Server running on port ${port}`));
 
-// const server = express()
-//     .use((req, res) => res.sendFile(INDEX) )
-//     .listen(PORT, () => console.log(`Listening on ${ PORT }`));
-// const wss = new WebSocketServer({ server });
+// main server enable this if not using localdev
+const server = express()
+    .use((req, res) => res.sendFile(INDEX) )
+    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
+const wss = new WebSocketServer({ server });
 
 var clients = [];
 function wsSend(type, client_uuid, nickname, message) {
@@ -33,8 +34,18 @@ function wsSend(type, client_uuid, nickname, message) {
         })); }
 } }
 
+// todo: add time update function every 2 seconds to keep the connection alive current bug connection dies if no test from client.
+
 var clientIndex = 1;
 wss.on('connection', function(ws) {
+
+    // // Keep connection alive by sending time every second
+    // setInterval(() => {
+    //     wss.clients.forEach((client) => {
+    //         client.send(console.log(new Date().getTime().toString()));
+    //     });
+    // }, 5000);
+
     var client_uuid = uuid.v4();
 
     let randomNamesArr = ["🍎", "🍊", "🍌", "🍑", "🍆", "🥦", "🥛", "🐂", "🐷", "🐱", "🎩", "🐑", "🐶", "🐎", "👩", "👨", "💰", "👃", "🦢", "👂", "🤚", "😯", "🐯", "🏠", "👀", "🐲", "❤️", "🇨🇳", "🇺🇸"];
@@ -42,7 +53,6 @@ wss.on('connection', function(ws) {
     //get length of array
     var randomNum = Math.floor((Math.random() * randomNamesArr.length) - 1);
     let nickname = randomNamesArr[randomNum];
-
 
     nickname = nickname + clientIndex;
     clientIndex+=1;
@@ -63,6 +73,7 @@ wss.on('connection', function(ws) {
         wsSend("message", client_uuid, nickname, message);
     }
     });
+
     var closeSocket = function(customMessage) {
         for (var i=0; i<clients.length; i++) {
         if(clients[i].id === client_uuid) {
@@ -76,10 +87,12 @@ wss.on('connection', function(ws) {
             clients.splice(i, 1);
         }
     } }
+
     ws.on('close', function() { closeSocket();
     });
     process.on('SIGINT', function() {
         console.log("Closing things");
         closeSocket('Server has disconnected');
         process.exit();
-    }); });
+    });
+});

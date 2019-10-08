@@ -9,13 +9,13 @@
 </head>
 
 <script>
-    // testing server only disable when finished testing and enable main server
-    var ws = new WebSocket("ws://localhost:8080");
+    // // testing server only disable when finished testing and enable main server
+    // var ws = new WebSocket("ws://localhost:8080");
 
 
-// //  Main server usage for heroku
-//     var HOST = location.origin.replace(/^http/, 'ws')
-//     var ws = new WebSocket(HOST);
+//  Main server usage for heroku
+    var HOST = location.origin.replace(/^http/, 'ws')
+    var ws = new WebSocket(HOST);
 
     // our name variable
     var nickname = "";
@@ -38,17 +38,23 @@
         var message_text = "<h2>" + preface_label + "&nbsp;&nbsp;" + message + "</h2>";
         messageElem.innerHTML = message_text; messages.appendChild(messageElem);
     }
+
     ws.onmessage = function(e) {
+        console.log("I want to see the data" + e.data);
         var data = JSON.parse(e.data);
         nickname = data.nickname;
-        appendLog(data.type, data.nickname, data.message); console.log("ID: [%s] = %s", data.id, data.message);
-    }
+        appendLog(data.type, data.nickname, data.message);
+        console.log("ID: [%s] = %s", data.id, data.message);
+    };
+
     ws.onclose = function(e) {
         appendLog("Connection closed");
         console.log("Connection closed");
-    }
+    };
+
     function sendMessage() {
-        var messageField = document.getElementById('message'); if(ws.readyState === WebSocket.OPEN) {
+        var messageField = document.getElementById('message');
+        if(ws.readyState === WebSocket.OPEN) {
             ws.send(messageField.value);
         }
         messageField.value = '';
