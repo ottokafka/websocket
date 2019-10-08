@@ -28,7 +28,7 @@ function wsDateSend() {
         wss.clients.forEach((client) => {
             client.send(JSON.stringify({"date":new Date().toLocaleString()}));
         });
-    }, 55000);
+    }, 40000);
 }
 
 var clients = [];
